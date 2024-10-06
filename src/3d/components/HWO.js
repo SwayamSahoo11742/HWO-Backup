@@ -5,6 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 export const HWOLOS = ({ v1, v2, params }) => {
+  console.log(v1)
   const h = v1.distanceTo(v2);
 
   const HFOV = Math.atan(params.sensorSize/(2*params.focalLength * 1000))

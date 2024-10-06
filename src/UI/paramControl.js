@@ -23,6 +23,8 @@ export const ParamControl = ({setParams, params, coords, orbitRadius, setAnalysi
           Focal Length: &nbsp;
           <input
             type="number"
+            step={0.01}
+            min={0.0}
             name="focalLength"
             value={params.focalLength}
             onChange={handleChange}
@@ -35,8 +37,10 @@ export const ParamControl = ({setParams, params, coords, orbitRadius, setAnalysi
         <label className="block">
           Sensor Size: &nbsp;&nbsp;&nbsp;
           <input
+          step={0.01}
             type="number"
             name="sensorSize"
+            min={0}
             value={params.sensorSize}
             onChange={handleChange}
             className="border p-2 rounded"
@@ -48,8 +52,10 @@ export const ParamControl = ({setParams, params, coords, orbitRadius, setAnalysi
         <label className="block">
           Aperture: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <input
+          step={0.01}
             type="number"
             name="aperture"
+            min={0}
             value={params.aperture}
             onChange={handleChange}
             className="border p-2 rounded"

@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import React, { useState, useRef, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Sphere, Line, OrbitControls, useAspect } from '@react-three/drei';
 import * as THREE from 'three';
 import data from './exo.json';
@@ -8,11 +8,11 @@ import { HWOLOS } from './components/HWO';
 import { Galaxy } from './components/galaxy';
 import { coords } from './components/planets';
 import { pointInCone } from '../utils/utils';
-import { createOrbitPoints } from './components/utils';
+import { createOrbitPoints, updateLabel } from './components/utils';
 import { AnalysisGeneration } from '../utils/utils';
 
 const scale = 1e+16;
-export const ExoExplore = ({params, coords, setCoords, setCoordsExtremes, coordsExtremes, LOS,setLOS, property, setAnalysis}) => {
+export const ExoExplore = ({params, coords, setCoords, setCoordsExtremes, coordsExtremes, LOS,setLOS, property, setAnalysis, tar}) => {
   const orbitRadius = 2542864.0; 
 
   const [d, setD] = useState(6);
@@ -20,15 +20,27 @@ export const ExoExplore = ({params, coords, setCoords, setCoordsExtremes, coords
   const [angle, setAngle] = useState(0);
   const tiltAngle = THREE.MathUtils.degToRad(60);
   
-
+  const planetRef = useRef();
+  const labelRef = useRef();
+  const textPosition = new THREE.Vector3(); 
 
   // Animated target moving along the orbit
 // Animated target moving along the orbit, rotating only once upon startup
+
+const Animation = () => {
+  const { camera, scene } = useThree(); // Get camera and scene from useThree
+  useFrame(() => {
+      if (planetRef.current && labelRef.current) {
+        updateLabel(planetRef.current, labelRef.current, document.getElementById('canvas'), camera, textPosition);
+      }
+    });
+}
+
+
 const AnimatedTarget = ({ radius }) => {
   const [hasRotated, setHasRotated] = useState(false);
-
+   
   useFrame((state, delta) => {
-    if (hasRotated) return;
 
     const newAngle = angle + delta*200;
 
@@ -68,9 +80,18 @@ const AnimatedTarget = ({ radius }) => {
   });
 };
 
+useEffect(() => {
+  const pts = createOrbitPoints(orbitRadius, params);
+  const HFOV = Math.atan(params.sensorSize/(2*params.focalLength * 1000))
+  const r = pts[0].distanceTo(coneProp.v2) *Math.tan(HFOV)
+  console.log(pts[0])
+  setLOS(pts[0])
+
+}, [params]);
 
 
   return (
+    <>
     <Canvas
       id='canvas'
       gl={{ alpha: false, antialias: true }}
@@ -85,11 +106,21 @@ const AnimatedTarget = ({ radius }) => {
         color="blue" // Color of the orbit line
         lineWidth={1} // Thickness of the line
       />
-
+      {tar?       
+      <mesh position={[tar.x, tar.y, tar.z]} ref={planetRef}>
+        <sphereGeometry args={[10000, 32, 32]}/> {/* Sphere with radius 1 */}
+        <meshBasicMaterial color="royalblue" />
+      </mesh>:null}
       <AnimatedTarget radius={orbitRadius} />
       <ExoplanetPoints data={data} params={params} coords={coords} setCoords={setCoords} setCoordsExtremes={setCoordsExtremes} coordsExtremes={coordsExtremes} property={property}/>
       <HWOLOS v1={LOS} v2={new THREE.Vector3(0, 0, 0)} params={params} />
       <OrbitControls />
+      <Animation />
     </Canvas>
+    {tar?       
+    <div ref={labelRef} id={tar.pl_name} className="absolute z-50 text-white">
+        {tar.pl_name}
+      </div>: null}
+    </>
   );
 };

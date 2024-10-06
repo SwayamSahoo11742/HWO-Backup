@@ -26,6 +26,7 @@ function App() {
   const orbitRadius = 2542864.0;
   const [LOS, setLOS] = useState(new THREE.Vector3(50000, 0, 0));
   const [exo, setExo] = useState(null);
+  const [tar, setTar] = useState(null);
   const [params, setParams] = useState({ 
     aperture: 8, 
     focalLength: 131.4, 
@@ -55,11 +56,12 @@ function App() {
           LOS={LOS}
           setLOS={setLOS}
           property={property}
+          tar={tar}
         />
       )}
 
       <div className="absolute top-5 left-5 space-y-4 z-50">
-        <SearchBar planets={coords} setExo={setExo} LOS={new THREE.Vector3(0,0,orbitRadius)} orbitRaidus={orbitRadius} setParams={setParams} setLOS={setLOS} setProperty={setProperty}/>
+        <SearchBar planets={coords} setExo={setExo} LOS={new THREE.Vector3(0,0,orbitRadius)} orbitRaidus={orbitRadius} setParams={setParams} setLOS={setLOS} setProperty={setProperty}setTar={setTar}/>
       </div>
 
         {exo?
@@ -80,6 +82,8 @@ function App() {
   <div className="absolute bottom-2 right-5  space-y-4 z-50 w-1/4 max-h-[200vh]">
     <ExoBarChart analytics={analysis} />
   </div>
+
+
 
   <div className="absolute top-5 right-5 space-y-4 z-50 w-1/4 max-h-[10vh]">
     <ESIPlot points={analysis} />

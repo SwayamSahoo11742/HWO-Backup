@@ -4,6 +4,7 @@ import * as THREE from 'three';
 // The updateLabel function
 
 export const updateLabel = (model, textDiv, sceneDiv, camera, textPosition) => {
+  console.log(textDiv)
     if (model) {
       textPosition.setFromMatrixPosition(model.matrixWorld);
       textPosition.project(camera);

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { pointTo } from '../utils/utils';
 
-const SearchBar = ({ planets, setExo, orbitRaidus, LOS, setParams, setLOS, setProperty }) => {
+const SearchBar = ({ planets, setExo, orbitRaidus, LOS, setParams, setLOS, setProperty, setTar}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortProperty, setSortProperty] = useState('characterizable'); // Default sort by 'characterizable'
   const [sortOrder, setSortOrder] = useState('descending'); // Default sort order
@@ -96,7 +96,7 @@ const SearchBar = ({ planets, setExo, orbitRaidus, LOS, setParams, setLOS, setPr
                   </span>
                   <div>
                     <button onClick={() => setExo(item)} className='btn btn-primary'>View</button>
-                    <button onClick={() => pointTo(item, orbitRaidus, LOS, setParams, setLOS)} className='btn btn-primary ml-2'>Point to</button>
+                    <button onClick={() => pointTo(item, orbitRaidus, LOS, setParams, setLOS, setTar)} className='btn btn-primary ml-2'>Point to</button>
                   </div>
                 </li>
               ))

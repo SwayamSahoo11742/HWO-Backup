@@ -40,11 +40,12 @@ export function calculatePitchYawRoll(v1, v2) {
     return { pitch, yaw, roll };
 }
 
-export const pointTo = (data, orbitRad, LOS, setParams, setLOS) => {
+export const pointTo = (data, orbitRad, LOS, setParams, setLOS, setTar) => {
     const scaledVec = scaledVector(new THREE.Vector3(data.x, data.y, data.z), orbitRad);
  
     const { pitch, yaw, roll } = calculatePitchYawRoll(LOS, scaledVec);
     setLOS(scaledVec)
+    setTar(data)
     setParams(prevParams => {
         return {
             ...prevParams,
