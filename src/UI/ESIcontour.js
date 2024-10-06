@@ -34,7 +34,7 @@ const ESIPlot = memo(({ points }) => {
   }
 
   return (
-    <div>
+    <div style={{ height: '30vh' }}>
       <Plot
         data={[
           {
@@ -84,8 +84,9 @@ const ESIPlot = memo(({ points }) => {
           },
           paper_bgcolor: 'rgba(0,0,0,0)',
           plot_bgcolor: 'rgba(0,0,0,0)',
+          autosize: true, // Ensures it adapts to container size
         }}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%' }} // Ensures full width and height of the parent
       />
     </div>
   );

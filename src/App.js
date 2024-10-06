@@ -13,6 +13,7 @@ import SearchBar from "./UI/Search";
 import * as THREE from 'three';
 function App() {
   const [coords, setCoords] = useState([]);
+  const [property, setProperty] = useState("ESI")
   const [coordsExtremes, setCoordsExtremes] = useState({
     st_rad: { min: Infinity, max: -Infinity },
     pl_rade: { min: Infinity, max: -Infinity },
@@ -53,40 +54,43 @@ function App() {
           coordsExtremes={coordsExtremes} 
           LOS={LOS}
           setLOS={setLOS}
+          property={property}
         />
       )}
 
       <div className="absolute top-5 left-5 space-y-4 z-50">
-        <SearchBar planets={coords} setExo={setExo} LOS={new THREE.Vector3(0,0,orbitRadius)} orbitRaidus={orbitRadius} setParams={setParams} setLOS={setLOS}/>
+        <SearchBar planets={coords} setExo={setExo} LOS={new THREE.Vector3(0,0,orbitRadius)} orbitRaidus={orbitRadius} setParams={setParams} setLOS={setLOS} setProperty={setProperty}/>
       </div>
 
         {exo?
             <>         
 
-            <div className="absolute top-5 right-5 space-y-4 z-50">
-              <button onClick={() => setExo(null)} className="btn btn-primary w-96">Return to HWO</button>   
+            <div className="absolute top-[calc(22%+10px)] right-5 space-y-4 z-50">
+              
               <HostStarTable data={exo} />
+              <button onClick={() => setExo(null)} className="btn btn-primary w-96">Return to HWO</button>   
             </div>
 
-            <div className="absolute top-[calc(22%+10px)] right-5 space-y-4 z-50">
+            <div className="absolute bottom-5 left-5 space-y-4 z-50">
               <ExoTable data={exo} />
             </div>
-
             </>
           :
-          <>
-            <div className="absolute top-1/2 right-5 transform -translate-y-1/2 space-y-4 z-50 w-1/4">
-              <ExoBarChart analytics={analysis} />
-            </div>
-      
-            <div className="absolute top-5 right-5 space-y-4 z-50">
-              <ESIPlot points={analysis} />
-            </div>
-      
-            <div className="absolute bottom-5 right-5 space-y-4 z-100" style={{ marginRight: "6%" }}>
-              <ParamControl setParams={setParams} params={params} coords={coords} orbitRadius={orbitRadius} setAnalysis={setAnalysis}/>
-            </div>
-        </>
+<>
+  <div className="absolute bottom-2 right-5  space-y-4 z-50 w-1/4 max-h-[200vh]">
+    <ExoBarChart analytics={analysis} />
+  </div>
+
+  <div className="absolute top-5 right-5 space-y-4 z-50 w-1/4 max-h-[10vh]">
+    <ESIPlot points={analysis} />
+  </div>
+
+  <div className="absolute bottom-5 left-5 space-y-4 z-100  max-h-[40vh] overflow-auto m-5" style={{ marginRight: "6%" }}>
+    <ParamControl setParams={setParams} params={params} coords={coords} orbitRadius={orbitRadius} setAnalysis={setAnalysis} />
+  </div>
+</>
+
+
 
         }
     </div>

@@ -9,11 +9,10 @@ import { Galaxy } from './components/galaxy';
 import { coords } from './components/planets';
 import { pointInCone } from '../utils/utils';
 import { createOrbitPoints } from './components/utils';
-
-
+import { AnalysisGeneration } from '../utils/utils';
 
 const scale = 1e+16;
-export const ExoExplore = ({params, coords, setCoords, setCoordsExtremes, coordsExtremes, LOS,setLOS}) => {
+export const ExoExplore = ({params, coords, setCoords, setCoordsExtremes, coordsExtremes, LOS,setLOS, property, setAnalysis}) => {
   const orbitRadius = 2542864.0; 
 
   const [d, setD] = useState(6);
@@ -21,7 +20,6 @@ export const ExoExplore = ({params, coords, setCoords, setCoordsExtremes, coords
   const [angle, setAngle] = useState(0);
   const tiltAngle = THREE.MathUtils.degToRad(60);
   
-
 
 
   // Animated target moving along the orbit
@@ -89,7 +87,7 @@ const AnimatedTarget = ({ radius }) => {
       />
 
       <AnimatedTarget radius={orbitRadius} />
-      <ExoplanetPoints data={data} params={params} coords={coords} setCoords={setCoords} setCoordsExtremes={setCoordsExtremes} coordsExtremes={coordsExtremes}/>
+      <ExoplanetPoints data={data} params={params} coords={coords} setCoords={setCoords} setCoordsExtremes={setCoordsExtremes} coordsExtremes={coordsExtremes} property={property}/>
       <HWOLOS v1={LOS} v2={new THREE.Vector3(0, 0, 0)} params={params} />
       <OrbitControls />
     </Canvas>

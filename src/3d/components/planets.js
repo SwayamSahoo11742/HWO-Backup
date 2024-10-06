@@ -39,7 +39,7 @@ const convertToCartesian = (glon, glat, radius = 1) => {
   return new THREE.Vector3(x, y, z);
 };
 
-export const ExoplanetPoints = ({ params, coords, setCoords, setCoordsExtremes, coordsExtremes}) => {
+export const ExoplanetPoints = ({ params, coords, setCoords, setCoordsExtremes, coordsExtremes, property}) => {
 
   useEffect(() => {
     const D = params.aperture;
@@ -52,7 +52,9 @@ export const ExoplanetPoints = ({ params, coords, setCoords, setCoordsExtremes, 
       sy_dist: { min: Infinity, max: -Infinity },
       SNR: { min: Infinity, max: -Infinity },
       ESmax: { min: Infinity, max: -Infinity },
-      ESI: {min : Infinity, max: -Infinity}
+      ESI: {min : Infinity, max: -Infinity},
+      sy_vmag : {min : Infinity, max: -Infinity},
+      pl_insol : {min: Infinity, max: -Infinity}
     };
   
     const isValid = (value) => !isNaN(value) && isFinite(value);
@@ -97,6 +99,14 @@ export const ExoplanetPoints = ({ params, coords, setCoords, setCoordsExtremes, 
         newMinMax.sy_dist.min = Math.min(newMinMax.sy_dist.min, sy_dist);
         newMinMax.sy_dist.max = Math.max(newMinMax.sy_dist.max, sy_dist);
       }
+      if (isValid(pl_insol)) {
+        newMinMax.pl_insol.min = Math.min(newMinMax.pl_insol.min, pl_insol);
+        newMinMax.pl_insol.max = Math.max(newMinMax.pl_insol.max, pl_insol);
+      }
+      if (isValid(sy_vmag)) {
+        newMinMax.sy_vmag.min = Math.min(newMinMax.sy_vmag.min, sy_vmag);
+        newMinMax.sy_vmag.max = Math.max(newMinMax.sy_vmag.max, sy_vmag);
+      }
       if (isValid(SNR)) {
         newMinMax.SNR.min = Math.min(newMinMax.SNR.min, SNR);
         newMinMax.SNR.max = Math.max(newMinMax.SNR.max, SNR);
@@ -106,7 +116,7 @@ export const ExoplanetPoints = ({ params, coords, setCoords, setCoordsExtremes, 
         newMinMax.ESmax.max = Math.max(newMinMax.ESmax.max, ESmax);
       }
 
-      const characterizable = (SNR > 5 && sy_dist < ESmax) 
+      const characterizable = ((SNR > 5 && sy_dist < ESmax) ? 1: 0);
       return {x:cartesian.x,y:cartesian.y,z:cartesian.z, glon, glat, st_rad, pl_rade, pl_orbsmax, sy_dist,pl_eqt,pl_bmasse,disc_year,hostname, discoverymethod,sy_dist_m, SNR, ESmax, characterizable, pl_orbeccen, sy_vmag,st_spectype, pl_name,disc_facility, pl_insol, ESI};
     });
   
@@ -132,8 +142,7 @@ export const ExoplanetPoints = ({ params, coords, setCoords, setCoordsExtremes, 
   }, [params.aperture]);
   
 
-
-
+  const key = property;
   const positions = useMemo(() => {
     return coords.map(({ x, y, z }) => new THREE.Vector3(x, y, z));
   }, [coords]);
@@ -148,16 +157,15 @@ export const ExoplanetPoints = ({ params, coords, setCoords, setCoordsExtremes, 
       vertices[idx * 3] = pos.x;
       vertices[idx * 3 + 1] = pos.y;
       vertices[idx * 3 + 2] = pos.z;
-      const key ="ESI";
 
 
       let r,g,b;
-      if(key === "characterizable"){
-        [r,g,b] = interpolateColor(1 ,0, pos[key], "#00FF00", "#FF0000")
+      if(property === "characterizable"){
+        [r,g,b] = interpolateColor(1 ,0, pos[property], "#00FF00", "#FF0000")
       }else{
-        const maxVal = coordsExtremes[key].max;
-        const minVal = coordsExtremes[key].min;
-        [r,g,b] = interpolateColor(minVal ,maxVal, pos[key], "#FF0000", "#00FF00")
+        const maxVal = coordsExtremes[property].max;
+        const minVal = coordsExtremes[property].min;
+        [r,g,b] = interpolateColor(minVal ,maxVal, pos[property], "#FF0000", "#00FF00")
       }
       colors[idx * 3] = r; // Red
       colors[idx * 3 + 1] = g; // Green
@@ -167,10 +175,10 @@ export const ExoplanetPoints = ({ params, coords, setCoords, setCoordsExtremes, 
     geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3)); // Set color attribute
     return geometry;
-  }, [positions, coords]);
+  }, [positions, coords, property]);
 
   const pointMaterial = useMemo(() => 
-    new THREE.PointsMaterial({ size: 10, vertexColors: true }), []); // Enable vertex colors
+    new THREE.PointsMaterial({ size: 50, vertexColors: true }), []); // Enable vertex colors
 
   return <points args={[pointGeometry, pointMaterial]} />;
 };
