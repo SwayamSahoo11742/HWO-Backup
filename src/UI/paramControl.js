@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AnalysisGeneration } from '../utils/utils';
-export const ParamControl = ({setParams, params, coords, orbitRadius, setAnalysis}) => {
+import { createOrbitPoints } from '../3d/components/utils';
+export const ParamControl = ({setParams, params, coords, orbitRadius, setAnalysis, setLOS}) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,7 +71,8 @@ export const ParamControl = ({setParams, params, coords, orbitRadius, setAnalysi
             type="number"
             name="pitch"
             value={params.pitch}
-            onChange={handleChange}
+            onChange={(e) => {handleChange(e);   const pts = createOrbitPoints(orbitRadius, params);
+              setLOS(pts[0]);}}
             className="border p-2 rounded"
             required
           />
@@ -83,7 +85,8 @@ export const ParamControl = ({setParams, params, coords, orbitRadius, setAnalysi
             type="number"
             name="yaw"
             value={params.yaw}
-            onChange={handleChange}
+            onChange={(e) => {handleChange(e);   const pts = createOrbitPoints(orbitRadius, params);
+              setLOS(pts[0]);}}
             className="border p-2 rounded"
             required
           />
@@ -96,7 +99,8 @@ export const ParamControl = ({setParams, params, coords, orbitRadius, setAnalysi
             type="number"
             name="roll"
             value={params.roll}
-            onChange={handleChange}
+            onChange={(e) => {handleChange(e);   const pts = createOrbitPoints(orbitRadius, params);
+              setLOS(pts[0]);}}
             className="border p-2 rounded"
             required
           />

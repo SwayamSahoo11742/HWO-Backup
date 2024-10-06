@@ -80,14 +80,6 @@ const AnimatedTarget = ({ radius }) => {
   });
 };
 
-useEffect(() => {
-  const pts = createOrbitPoints(orbitRadius, params);
-  const HFOV = Math.atan(params.sensorSize/(2*params.focalLength * 1000))
-  const r = pts[0].distanceTo(coneProp.v2) *Math.tan(HFOV)
-  console.log(pts[0])
-  setLOS(pts[0])
-
-}, [params]);
 
 
   return (

@@ -90,7 +90,7 @@ function App() {
   </div>
 
   <div className="absolute bottom-5 left-5 space-y-4 z-100  max-h-[40vh] overflow-auto m-5" style={{ marginRight: "6%" }}>
-    <ParamControl setParams={setParams} params={params} coords={coords} orbitRadius={orbitRadius} setAnalysis={setAnalysis} />
+    <ParamControl setParams={setParams} params={params} coords={coords} orbitRadius={orbitRadius} setAnalysis={setAnalysis} setLOS={setLOS} />
   </div>
 </>
 
