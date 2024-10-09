@@ -45,13 +45,17 @@ Product: https://soft-alpaca-79d6db.netlify.app/
 
 The Exoplaneteer project provides a 3D visualization designed to simulate and analyze the performance and capabilities of the Habitable Worlds Observatory (HWO) in characterizing known exoplanets. The app allows users to view exoplanets mapped in 3D space, look at details about them and their host stars, and adjust telescope parameters in order see how these changes impact the number of observable and characterizable exoplanets. Furthermore, it provides analytics to determine promising habitable exoplanet candidates, such as habitability scores, habitability zones, and others.
 
-
+<br>
 
 ### Process
 
 The app processes exoplanet data from the NASA Exoplanet Archive, which is used to map them in 3D space. Their positions are determined by galactic coordinates. We then use a cone to represent the line of sight of the HWO, which can be adjusted by tweaking the focal length and sensor size. The user is also able to adjust the aperture size, which affects the characterizability of exoplanets, which is updated in real time. The app uses signal-to-noise ratio (SNR) and distance from earth to calculate if an exoplanet is characterizable. 
 
 ![image](https://github.com/user-attachments/assets/4d9fff91-fc36-4524-b7de-d54373bae96f)
+
+
+
+<br>
 
 ### Analytics
 
@@ -67,6 +71,10 @@ Distance from habitable zone
 
 
 By looking at the graphs and values of the above, we can access how useful this mission will be, and its potential to find something valuable
+
+
+
+<br>
 
 ### Exoplanet Specifics and Filtering
 
@@ -90,6 +98,7 @@ We allow users to look into specific exoplanet systems in relation to their host
 
 ![image](https://github.com/user-attachments/assets/0c72fa37-b9ec-4094-898e-f0a06279d377)
 
+<br>
 
 ### Tools and Technology
 
@@ -101,12 +110,148 @@ We utilized the following tools and technologies to help us create Exoplaneteer
 
 - Data: NASA Exoplanet Archive
 
+<br>
+
+### Equations
+
+<ins><strong> SNR and ESmax </strong></ins>
+
+The SNR and max distance are given by:
+
+$SNR = SNR_0 \cdot \left( \frac{Rstar \cdot R_P \cdot \left( \frac{D}{6} \right)}{\left( \frac{ES}{10} \right) \cdot PS} \right) \cdot 2$ 
+
+$ES_{max} = 15 \cdot \frac{\left( \frac{D}{6} \right)}{PS}$
+
+<br> 
+
+
+| Var    | Description                      | Units      |
+|---------|----------------------------------|------------|
+| SNR     | Signal-To-Noise Ratio            | —          |
+| SNR0    | Base Signal-To-Noise Ratio       | —          |
+| ESmax   | Maximum Distance from Earth      | pc         |
+| Rstar   | Host Star Radius                 | Rsun       |
+| RP      | Exoplanet Radius                 | REarth     |
+| D       | Diameter of Telescope            | m          |
+| ES      | Distance from Earth              | pc         |
+| PS      | Planet-Star Distance             | AU         |
+
+The exoplanet is considered characterizable if $SNR > 5 \quad \text{and} \quad ES \leq ES_{max}$
+<br> 
+
+<br>
+
+<ins><strong> Line of Sight Cone </strong></ins>
+
+The cone of line of sight is computed using the following equations:
+
+$\text{HFOV} = \tan^{-1}\left(\frac{\text{sensorSize}}{2 \times \text{focalLength} \times 1000}\right)$
+
+$\text{radius} = h \cdot \tan(\text{HFOV})$
+
+| Name          | Description                           | Units       |
+|---------------|---------------------------------------|-------------|
+| HFOV          | Horizontal Field of View              | radians     |
+| sensorSize    | Sensor size                           | mm          |
+| focalLength   | Focal length of the lens              | m           |
+| h             | Distance from point to base of LOS    | m           |
+
+<br>
+<br>
+
+<ins> <strong>ESI </strong></ins>
+
+The ESI is calculated by:
+
+$\text{ESI}(S, R) = 1 - \sqrt{\frac{1}{2} \left[ \left( \frac{S - S_\oplus}{S + S_\oplus} \right)^2 + \left( \frac{R - R_\oplus}{R + R_\oplus} \right)^2 \right]}$
+
+| Name      | Description                        | Units     |
+|-----------|------------------------------------|-----------|
+| ESI       | Earth Similarity Index             | —         |
+| S         | Stellar Flux of Exoplanet          | Earth Solar Flux        |
+| $S \oplus$ | Stellar Flux of Earth             | Earth Solar Flux         |
+| R         | Radius of Exoplanet                | REarth        |
+| $R \oplus$ | Radius of Earth                    | REarth     |
+
+<br>
+<br>
+
+<ins><strong>Exoplanet to params </strong></ins>
+
+To scale a 3D point $\text{point} = (x, y, z)$ to a specified orbital radius $\text{orbitRad}$, the scaling factor $a$ is calculated as follows:
+
+$a = \frac{\text{orbitRad}}{\sqrt{x^2 + y^2 + z^2}}$
+
+The scaled point is then obtained by multiplying the original point by this scaling factor:
+
+${scaledPoint} = \text{point} \times a$
+
+Next, to find the pitch, yaw, and roll angles between two 3D vectors $\text{v1}$ and $\text{v2}$:
+
+
+$\text{unitV1} = \frac{\text{v1}}{||\text{v1}||}, \quad \text{unitV2} = \frac{\text{v2}}{||\text{v2}||}$
+
+
+$\text{direction} = \text{unitV2} - \text{unitV1}$
+
+$\text{quaternion} = \text{Quaternion}(\text{unitV1}, \text{unitV2})$
+
+$\text{Euler} = \text{QuaternionToEuler}(\text{quaternion})$
+
+$\text{pitch} = \text{radToDeg}(euler.x), \quad \text{yaw} = \text{radToDeg}(euler.y), \quad \text{roll} = \text{radToDeg}(euler.z)$
+
+The resulting angles can be represented as:
+
+${ \text{pitch}, \text{yaw}, \text{roll} }$
+
+<br>
+<br>
+
+<ins><strong> Habitable Zone </strong></ins>
+
+
+To calculate the radii of the habitability zone around a star based on its apparent magnitude, distance, and spectral type, the following steps are performed:
+
+$M = m - 5 \cdot \log_{10}\left(\frac{d}{10}\right)$
+
+$M_{bol} = M + BC$
+
+$L = 10^{\frac{M_{bol} - M_{bol_{Sun}}}{-2.5}}$
+
+
+$R_{inner} = \sqrt{\frac{L}{1.1}}$
+
+
+$R_{outer} = \sqrt{\frac{L}{0.54}}$
+
+The habitability zone radii can then be represented as:
+
+${ R_{inner}, R_{outer} \}$
+
+
+| Var       | Description                                     | Units          |
+|----------------|-------------------------------------------------|----------------|
+| $m$        | Apparent Magnitude of the star                 | Magnitude      |
+| $d$        | Distance from Earth to the star                 | Parsecs (pc)   |
+| $M$        | Absolute Magnitude of the star                  | Magnitude      |
+| $M_{bol}$  | Bolometric Magnitude of the star                | Magnitude      |
+| $L$        | Absolute Luminosity of the star                 | Solar Luminosity (L☉) |
+| $R_{inner}$ | Inner radius of the habitability zone           | AU (Astronomical Units) |
+| $R_{outer}$| Outer radius of the habitability zone           | AU (Astronomical Units) |
+| $specType$ | Spectral Type correction factor                  | Magnitude      |
+| $M_{bol_{Sun}}$ | Bolometric Magnitude of the Sun          | Magnitude      |
+
+
+
+<br>
+
 ### Benefits
 
 This app provides a visualization that can teach users about exoplanets, the HWO telescope and its configurations and impact on exoplanets
 The app can help explore habitability and see distributions of exoplanets based on certain parameters
 It can give stakeholders insight on the usefulness and the impact of the HWO, and how changes to its different aspects may change the capability and potential of the HWO.
 
+<br>
 
 ### The Goal
 
@@ -134,6 +279,8 @@ We plan on furthur developing this website into somehting robust and useful, ins
   - The only reason this si last is because the launch of HWO is still far, but as soon as it is launched, this will be the highest priority.
 
 <br>
+
+
 
 ## Refereces
 - [Habitable Zone Calculation](https://www.planetarybiology.com/calculating_habitable_zone.html)
