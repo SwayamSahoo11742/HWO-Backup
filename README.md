@@ -1,28 +1,5 @@
 # Exoplaneteer
 
-The project made for [NASA International Space Apps Challenege](https://www.spaceappschallenge.org/)
-
-<br>
-
-## The Team
-The team is comprised of 4 High School students in the Greater Boston Metropolitan area.
-
-Ansel Dsouza: A freshman who contributed heavily towards the backend and mathematics sectors of the space app. 
-
-Swayam Sahoo: A sophomore who contributed all-around, in terms of UI, 3d renders, backend, mathematics, as well as coming up with the plan. 
-
-Harshit Masalawala: A sophomore who mainly contributed towards UI and the general design of the website, as well as the presentation. 
-
-Akhil Dantam: A senior responsible for the implementation of data and statistics in the website.
-
-<br>
-
-## The Challenge
-We decided to pick the intruiging "Navigator for the Habitable Worlds Observatory (HWO): Mapping the Characterizable Exoplanets in our Galaxy", whose problem statement is given below, taken fromt he website:
-
-"Which exoplanets will be observable with the future Habitable Worlds Observatory (HWO)? One way of determining the most interesting exoplanetary targets for HWO would be to visualize which of the currently known exoplanets HWO could potentially observe. Your challenge is to develop an app that enables users to visualize the observational paths across our galaxy to the known exoplanets in the solar neighborhood as a function of their potential for characterization by HWO."
-
-<br>
 
 ## High-Level Summary
 We developed Exoplaneteer, an interactive 3D visualization app that simulates the potential of the Habitable Worlds Observatory (HWO) to characterize known exoplanets. The app visualizes the exoplanet population and allows users to adjust telescope and instrument parameters, such as aperture and sensor size, to see how these changes affect the number of detectable exoplanets. By offering real-time updates on the observability of exoplanets, Exoplaneteer helps NASA stakeholders explore HWO's performance, providing valuable insights into which exoplanets are most promising for further study and how to optimize the observatory’s capabilities. This tool supports informed decision-making in the ongoing search for habitable worlds.
